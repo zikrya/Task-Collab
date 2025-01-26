@@ -7,7 +7,7 @@ import TaskForm from "@/components/TaskForm";
 import TaskList from "@/components/TaskList";
 import Header from "@/components/Header";
 import ErrorBanner from "@/components/ErrorBanner";
-import { setupSocketListeners, emitAddTask, emitToggleTask, emitDeleteTask } from "@/lib/socketService";
+import { setupSocketListeners, emitAddTask, emitToggleTask, emitDeleteTask } from "@/lib/SocketService";
 import { validateTaskInput } from "@/lib/validators";
 import { Task } from "@/lib/types";
 

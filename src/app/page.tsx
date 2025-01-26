@@ -20,7 +20,7 @@ export default function Home() {
     e.preventDefault()
     if (username.trim() !== "") {
       setIsLoading(true)
-      await new Promise((resolve) => setTimeout(resolve, 1000)) // Simulating API call
+      await new Promise((resolve) => setTimeout(resolve, 500)) 
       router.push(`/todo?username=${encodeURIComponent(username)}`)
     }
   }
