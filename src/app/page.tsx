@@ -1,8 +1,9 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import TaskForm from '@/components/TaskForm';
-import TaskList from '@/components/TaskList';
+import React, { useState, useEffect } from "react";
+import TaskForm from "@/components/TaskForm";
+import TaskList from "@/components/TaskList";
+import socket from "@/lib/socket";
 
 interface Task {
   id: string;
@@ -13,6 +14,30 @@ interface Task {
 export default function Home() {
   const [tasks, setTasks] = useState<Task[]>([]);
 
+  useEffect(() => {
+    socket.on("taskAdded", (task: Task) => {
+      setTasks((prevTasks) => [...prevTasks, task]);
+    });
+
+    socket.on("taskCompleted", (id: string) => {
+      setTasks((prevTasks) =>
+        prevTasks.map((task) =>
+          task.id === id ? { ...task, completed: true } : task
+        )
+      );
+    });
+
+    socket.on("taskDeleted", (id: string) => {
+      setTasks((prevTasks) => prevTasks.filter((task) => task.id !== id));
+    });
+
+    return () => {
+      socket.off("taskAdded");
+      socket.off("taskCompleted");
+      socket.off("taskDeleted");
+    };
+  }, []);
+
   const handleAddTask = (text: string) => {
     const newTask: Task = {
       id: Date.now().toString(),
@@ -20,6 +45,7 @@ export default function Home() {
       completed: false,
     };
     setTasks((prevTasks) => [...prevTasks, newTask]);
+    socket.emit("taskAdded", newTask);
   };
 
   const handleCompleteTask = (id: string) => {
@@ -28,10 +54,12 @@ export default function Home() {
         task.id === id ? { ...task, completed: true } : task
       )
     );
+    socket.emit("taskCompleted", id);
   };
 
   const handleDeleteTask = (id: string) => {
     setTasks((prevTasks) => prevTasks.filter((task) => task.id !== id));
+    socket.emit("taskDeleted", id);
   };
 
   return (
