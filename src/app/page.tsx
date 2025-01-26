@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { v4 as uuidv4 } from "uuid";
 import TaskForm from "@/components/TaskForm";
 import TaskList from "@/components/TaskList";
 import socket from "@/lib/socket";
@@ -40,25 +41,20 @@ export default function Home() {
 
   const handleAddTask = (text: string) => {
     const newTask: Task = {
-      id: Date.now().toString(),
+      id: uuidv4(),
       text,
       completed: false,
     };
-    setTasks((prevTasks) => [...prevTasks, newTask]);
+
+    // Emit the new task to the server
     socket.emit("taskAdded", newTask);
   };
 
   const handleCompleteTask = (id: string) => {
-    setTasks((prevTasks) =>
-      prevTasks.map((task) =>
-        task.id === id ? { ...task, completed: true } : task
-      )
-    );
     socket.emit("taskCompleted", id);
   };
 
   const handleDeleteTask = (id: string) => {
-    setTasks((prevTasks) => prevTasks.filter((task) => task.id !== id));
     socket.emit("taskDeleted", id);
   };
 

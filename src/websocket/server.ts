@@ -19,9 +19,19 @@ const io = new Server(server, {
 io.on("connection", (socket) => {
   console.log(`Client connected: ${socket.id}`);
 
-  socket.on("testEvent", (message) => {
-    console.log(`Message received: ${message}`);
-    socket.emit("testResponse", `Server received: ${message}`);
+  socket.on("taskAdded", (task) => {
+    console.log(`Task added: ${JSON.stringify(task)}`);
+    io.emit("taskAdded", task);
+  });
+
+  socket.on("taskCompleted", (id) => {
+    console.log(`Task completed: ${id}`);
+    io.emit("taskCompleted", id);
+  });
+
+  socket.on("taskDeleted", (id) => {
+    console.log(`Task deleted: ${id}`);
+    io.emit("taskDeleted", id);
   });
 
   socket.on("disconnect", () => {
