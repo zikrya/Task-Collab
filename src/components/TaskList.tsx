@@ -1,18 +1,18 @@
-import type React from "react"
-import { motion, AnimatePresence } from "framer-motion"
-import { CheckIcon, TrashIcon } from "@heroicons/react/24/outline"
+import React from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { CheckIcon, TrashIcon } from "@heroicons/react/24/outline";
 
 interface Task {
-  id: string
-  text: string
-  completed: boolean
-  user: string
+  id: string;
+  text: string;
+  completed: boolean;
+  user: string;
 }
 
 interface TaskListProps {
-  tasks: Task[]
-  onCompleteTask: (id: string) => void
-  onDeleteTask: (id: string) => void
+  tasks: Task[];
+  onCompleteTask: (id: string) => void;
+  onDeleteTask: (id: string) => void;
 }
 
 const TaskList: React.FC<TaskListProps> = ({ tasks, onCompleteTask, onDeleteTask }) => {
@@ -35,13 +35,18 @@ const TaskList: React.FC<TaskListProps> = ({ tasks, onCompleteTask, onDeleteTask
                 <button
                   onClick={() => onCompleteTask(task.id)}
                   className={`flex-shrink-0 w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors duration-200 ease-in-out ${
-                    task.completed ? "bg-green-500 border-green-500" : "border-gray-300 hover:border-green-500"
+                    task.completed
+                      ? "bg-green-500 border-green-500"
+                      : "border-gray-300 hover:border-green-500"
                   }`}
-                  disabled={task.completed}
                 >
                   {task.completed && <CheckIcon className="w-3 h-3 text-white" />}
                 </button>
-                <span className={`text-lg ${task.completed ? "line-through text-gray-500" : "text-gray-700"}`}>
+                <span
+                  className={`text-lg ${
+                    task.completed ? "line-through text-gray-500" : "text-gray-700"
+                  }`}
+                >
                   {task.text}
                 </span>
               </div>
@@ -59,7 +64,7 @@ const TaskList: React.FC<TaskListProps> = ({ tasks, onCompleteTask, onDeleteTask
         ))}
       </ul>
     </AnimatePresence>
-  )
-}
+  );
+};
 
-export default TaskList
+export default TaskList;
