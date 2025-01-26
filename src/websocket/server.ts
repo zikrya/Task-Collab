@@ -10,7 +10,7 @@ const server = createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: "https://task-collab-omega.vercel.app",
     methods: ["GET", "POST"],
     credentials: true,
   },
@@ -39,7 +39,12 @@ io.on("connection", (socket) => {
   });
 });
 
-const PORT = 8008;
-server.listen(PORT, () => {
-  console.log(`WebSocket server running on http://localhost:${PORT}`);
+const PORT = parseInt(process.env.PORT || "3000", 10);
+
+server.listen(PORT, "0.0.0.0", () => {
+  console.log(`WebSocket server running on http://0.0.0.0:${PORT}`);
+});
+
+app.get("/health", (req, res) => {
+  res.send("OK");
 });

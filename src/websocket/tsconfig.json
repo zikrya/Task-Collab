@@ -1,13 +1,14 @@
 {
-    "compilerOptions": {
-      "target": "ESNext",
-      "module": "CommonJS",
-      "moduleResolution": "Node",
-      "strict": true,
-      "esModuleInterop": true,
-      "skipLibCheck": true,
-      "forceConsistentCasingInFileNames": true
-    },
-    "include": ["server.ts"],
-    "exclude": ["node_modules", "jest.config.ts", "**/*.test.ts", "**/__tests__/**"]
-  }
+  "compilerOptions": {
+    "outDir": "dist",
+    "target": "ESNext",
+    "module": "CommonJS",
+    "moduleResolution": "Node",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": ["server.ts"],
+  "exclude": ["node_modules", "jest.config.ts", "**/*.test.ts", "**/__tests__/**"]
+}
