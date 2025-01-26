@@ -1,59 +1,56 @@
-"use client";
+"use client"
 
-import React, { useState, useEffect } from "react";
-import { useSearchParams } from "next/navigation";
-import { v4 as uuidv4 } from "uuid";
-import TaskForm from "@/components/TaskForm";
-import TaskList from "@/components/TaskList";
-import socket from "@/lib/socket";
+import React, { useState, useEffect } from "react"
+import { useSearchParams } from "next/navigation"
+import { v4 as uuidv4 } from "uuid"
+import TaskForm from "@/components/TaskForm"
+import TaskList from "@/components/TaskList"
+import socket from "@/lib/socket"
+import { motion, AnimatePresence } from "framer-motion"
 
 interface Task {
-  id: string;
-  text: string;
-  completed: boolean;
-  user: string;
+  id: string
+  text: string
+  completed: boolean
+  user: string
 }
 
 export default function TodoPage() {
-  const searchParams = useSearchParams();
-  const username = searchParams.get("username") || "Anonymous";
+  const searchParams = useSearchParams()
+  const username = searchParams.get("username") || "Anonymous"
 
-  const [tasks, setTasks] = useState<Task[]>([]);
-  const [error, setError] = useState<string | null>(null);
+  const [tasks, setTasks] = useState<Task[]>([])
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     socket.on("taskAdded", (task: Task) => {
-      setTasks((prevTasks) => [...prevTasks, task]);
-    });
+      setTasks((prevTasks) => [...prevTasks, task])
+    })
 
     socket.on("taskCompleted", (id: string) => {
-      setTasks((prevTasks) =>
-        prevTasks.map((task) =>
-          task.id === id ? { ...task, completed: true } : task
-        )
-      );
-    });
+      setTasks((prevTasks) => prevTasks.map((task) => (task.id === id ? { ...task, completed: true } : task)))
+    })
 
     socket.on("taskDeleted", (id: string) => {
-      setTasks((prevTasks) => prevTasks.filter((task) => task.id !== id));
-    });
+      setTasks((prevTasks) => prevTasks.filter((task) => task.id !== id))
+    })
 
     return () => {
-      socket.off("taskAdded");
-      socket.off("taskCompleted");
-      socket.off("taskDeleted");
-    };
-  }, []);
+      socket.off("taskAdded")
+      socket.off("taskCompleted")
+      socket.off("taskDeleted")
+    }
+  }, [])
 
   const handleAddTask = (text: string) => {
     if (text.trim() === "") {
-      setError("Task cannot be empty.");
-      return;
+      setError("Task cannot be empty.")
+      return
     }
 
     if (tasks.some((task) => task.text.toLowerCase() === text.toLowerCase())) {
-      setError("Task with the same name already exists.");
-      return;
+      setError("Task with the same name already exists.")
+      return
     }
 
     const newTask: Task = {
@@ -61,30 +58,51 @@ export default function TodoPage() {
       text,
       completed: false,
       user: username,
-    };
+    }
 
-    setError(null);
-    socket.emit("taskAdded", newTask);
-  };
+    setError(null)
+    socket.emit("taskAdded", newTask)
+  }
 
   const handleCompleteTask = (id: string) => {
-    socket.emit("taskCompleted", id);
-  };
+    socket.emit("taskCompleted", id)
+  }
 
   const handleDeleteTask = (id: string) => {
-    socket.emit("taskDeleted", id);
-  };
+    socket.emit("taskDeleted", id)
+  }
 
   return (
-    <div className="max-w-2xl mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Welcome, {username}!</h1>
-      {error && <p className="text-red-500 mb-4">{error}</p>}
-      <TaskForm onAddTask={handleAddTask} />
-      <TaskList
-        tasks={tasks}
-        onCompleteTask={handleCompleteTask}
-        onDeleteTask={handleDeleteTask}
-      />
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 py-16 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-3xl mx-auto">
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="text-center mb-12"
+        >
+          <h1 className="text-4xl font-extrabold text-gray-900 mb-2">Task Collab</h1>
+          <p className="text-xl text-gray-600">Welcome, {username}!</p>
+        </motion.div>
+        <AnimatePresence>
+          {error && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              className="bg-red-50 border-l-4 border-red-400 p-4 mb-6 rounded-r-md"
+              role="alert"
+            >
+              <p className="text-red-700">{error}</p>
+            </motion.div>
+          )}
+        </AnimatePresence>
+        <div className="bg-white rounded-lg overflow-hidden border border-gray-200">
+          <TaskForm onAddTask={handleAddTask} />
+          <TaskList tasks={tasks} onCompleteTask={handleCompleteTask} onDeleteTask={handleDeleteTask} />
+        </div>
+      </div>
     </div>
-  );
+  )
 }
+
