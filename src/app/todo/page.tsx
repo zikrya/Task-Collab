@@ -1,7 +1,5 @@
-"use client";
-
-import React, { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
+'use client'
+import React, { useState, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 import TaskForm from "@/components/TaskForm";
 import TaskList from "@/components/TaskList";
@@ -15,10 +13,8 @@ interface Task {
 }
 
 export default function TodoPage() {
-  const searchParams = useSearchParams();
-  const username = searchParams.get("username") || "Anonymous";
-
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     socket.on("taskAdded", (task: Task) => {
@@ -44,13 +40,25 @@ export default function TodoPage() {
     };
   }, []);
 
-  const handleAddTask = (text: string) => {
+  const handleAddTask = (text: string, username: string) => {
+    if (text.trim() === "") {
+      setError("Task cannot be empty.");
+      return;
+    }
+
+    if (tasks.some((task) => task.text.toLowerCase() === text.toLowerCase())) {
+      setError("Task with the same name already exists.");
+      return;
+    }
+
     const newTask: Task = {
       id: uuidv4(),
       text,
       completed: false,
-      user: username, // Include the username
+      user: username,
     };
+
+    setError(null);
     socket.emit("taskAdded", newTask);
   };
 
@@ -64,8 +72,9 @@ export default function TodoPage() {
 
   return (
     <div className="max-w-2xl mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Welcome, {username}!</h1>
-      <TaskForm onAddTask={handleAddTask} />
+      <h1 className="text-2xl font-bold mb-4">Welcome, User!</h1>
+      {error && <p className="text-red-500 mb-4">{error}</p>}
+      <TaskForm onAddTask={(text) => handleAddTask(text, "User")} />
       <TaskList
         tasks={tasks}
         onCompleteTask={handleCompleteTask}
