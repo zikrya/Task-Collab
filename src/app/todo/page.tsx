@@ -7,13 +7,8 @@ import TaskForm from "@/components/TaskForm";
 import TaskList from "@/components/TaskList";
 import socket from "@/lib/socket";
 import { motion, AnimatePresence } from "framer-motion";
+import { Task } from "@/lib/types";
 
-interface Task {
-  id: string;
-  text: string;
-  completed: boolean;
-  user: string;
-}
 
 export default function TodoPage() {
   const searchParams = useSearchParams();

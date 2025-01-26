@@ -1,19 +1,9 @@
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { CheckIcon, TrashIcon } from "@heroicons/react/24/outline";
+import { Task, TaskListProps } from '../lib/types'
 
-interface Task {
-  id: string;
-  text: string;
-  completed: boolean;
-  user: string;
-}
 
-interface TaskListProps {
-  tasks: Task[];
-  onCompleteTask: (id: string) => void;
-  onDeleteTask: (id: string) => void;
-}
 
 const TaskList: React.FC<TaskListProps> = ({ tasks, onCompleteTask, onDeleteTask }) => {
   return (

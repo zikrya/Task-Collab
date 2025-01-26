@@ -24,9 +24,9 @@ io.on("connection", (socket) => {
     io.emit("taskAdded", task);
   });
 
-  socket.on("taskCompleted", (id) => {
-    console.log(`Task completed: ${id}`);
-    io.emit("taskCompleted", id);
+  socket.on("taskCompleted", (updatedTask) => {
+    console.log(`Task toggled: ${updatedTask.text}, Completed: ${updatedTask.completed}`);
+    io.emit("taskCompleted", updatedTask);
   });
 
   socket.on("taskDeleted", (id) => {

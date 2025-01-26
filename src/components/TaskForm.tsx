@@ -3,10 +3,9 @@ import type React from "react"
 import { useState } from "react"
 import { motion } from "framer-motion"
 import { PlusIcon } from "@heroicons/react/24/solid"
+import { TaskFormProps } from "@/lib/types"
 
-interface TaskFormProps {
-  onAddTask: (task: string) => void
-}
+
 
 const TaskForm: React.FC<TaskFormProps> = ({ onAddTask }) => {
   const [task, setTask] = useState<string>("")
