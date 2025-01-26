@@ -14,3 +14,8 @@ export interface TaskListProps {
 export interface TaskFormProps {
     onAddTask: (task: string) => void
   }
+
+export interface HeaderProps {
+    title: string;
+    subtitle: string;
+  }

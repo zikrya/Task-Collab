@@ -1,10 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
-
-interface HeaderProps {
-  title: string;
-  subtitle: string;
-}
+import { HeaderProps } from "@/lib/types";
 
 const Header: React.FC<HeaderProps> = ({ title, subtitle }) => (
   <motion.div
