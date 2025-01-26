@@ -4,7 +4,7 @@ import { io as Client, Socket } from "socket.io-client";
 
 describe("WebSocket Server", () => {
   let ioServer: Server;
-  let httpServer: any;
+  let httpServer: Server;
   let clientSocket: Socket;
 
   beforeAll((done) => {

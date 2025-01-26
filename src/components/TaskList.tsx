@@ -1,9 +1,7 @@
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { CheckIcon, TrashIcon } from "@heroicons/react/24/outline";
-import { Task, TaskListProps } from '../lib/types'
-
-
+import { TaskListProps } from '../lib/types'
 
 const TaskList: React.FC<TaskListProps> = ({ tasks, onCompleteTask, onDeleteTask }) => {
   return (
