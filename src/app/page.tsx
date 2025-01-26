@@ -1,71 +1,37 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { v4 as uuidv4 } from "uuid";
-import TaskForm from "@/components/TaskForm";
-import TaskList from "@/components/TaskList";
-import socket from "@/lib/socket";
-
-interface Task {
-  id: string;
-  text: string;
-  completed: boolean;
-}
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
-  const [tasks, setTasks] = useState<Task[]>([]);
+  const [username, setUsername] = useState("");
+  const router = useRouter();
 
-  useEffect(() => {
-    socket.on("taskAdded", (task: Task) => {
-      setTasks((prevTasks) => [...prevTasks, task]);
-    });
-
-    socket.on("taskCompleted", (id: string) => {
-      setTasks((prevTasks) =>
-        prevTasks.map((task) =>
-          task.id === id ? { ...task, completed: true } : task
-        )
-      );
-    });
-
-    socket.on("taskDeleted", (id: string) => {
-      setTasks((prevTasks) => prevTasks.filter((task) => task.id !== id));
-    });
-
-    return () => {
-      socket.off("taskAdded");
-      socket.off("taskCompleted");
-      socket.off("taskDeleted");
-    };
-  }, []);
-
-  const handleAddTask = (text: string) => {
-    const newTask: Task = {
-      id: uuidv4(),
-      text,
-      completed: false,
-    };
-
-    // Emit the new task to the server
-    socket.emit("taskAdded", newTask);
-  };
-
-  const handleCompleteTask = (id: string) => {
-    socket.emit("taskCompleted", id);
-  };
-
-  const handleDeleteTask = (id: string) => {
-    socket.emit("taskDeleted", id);
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (username.trim() !== "") {
+      router.push(`/todo?username=${encodeURIComponent(username)}`);
+    }
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-4">
-      <TaskForm onAddTask={handleAddTask} />
-      <TaskList
-        tasks={tasks}
-        onCompleteTask={handleCompleteTask}
-        onDeleteTask={handleDeleteTask}
-      />
+    <div className="flex flex-col items-center justify-center h-screen">
+      <h1 className="text-3xl font-bold mb-6">Enter Your Name</h1>
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        <input
+          type="text"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          placeholder="Enter your name"
+          className="p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+        <button
+          type="submit"
+          className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+        >
+          Start
+        </button>
+      </form>
     </div>
   );
 }
