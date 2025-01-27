@@ -115,11 +115,54 @@ Before you begin, ensure you have the following installed:
    Access the application at http://localhost:3000.
 
 ## Deployment
+### Frontend Deployment (Vercel)
+
+1. **Prepare for Deployment**
+
+   Ensure your `NEXT_PUBLIC_SOCKET_URL` environment variable is set to the Fly.io WebSocket URL.
+
+2. **Deploy the App**
+
+   The app automatically updates to vercel
+
+   ```bash
+   npm run build
+   ```
+
+   The frontend will be deployed and accessible via your Vercel-provided URL.
 
 ### Backend Deployment (Fly.io)
+
+1. **Prepare the Server for Deployment**
+
+   Ensure the server runs on port 3000 for production.
+
+   Run the build command to prepare the server for deployment:
+
+   ```bash
+   npm run build
+   ```
+
+2. **Deploy the WebSocket Server**
+
+   Use the Fly.io CLI to deploy the server:
+
+   ```bash
+   flyctl deploy
+   ```
+
+   The WebSocket server will be available at your Fly.io-provided URL.
+
+   The frontend will be deployed and accessible via your Vercel-provided URL.
 
 #### Prepare the Server for Deployment
 
 Ensure the server runs on port 3000 for production.
 
 Run the build command to prepare the server for deployment:
+
+## Features
+
+- **Real-Time Collaboration**: Tasks are updated instantly across all connected users.
+- **Environment-Aware Configurations**: Easily switch between local development and production environments.
+- **Responsive UI**: Built with Tailwind CSS for a seamless experience on all devices.
